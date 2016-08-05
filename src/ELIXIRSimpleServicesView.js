@@ -1,5 +1,6 @@
 /**
  * Created by Maximilian Koch (mkoch@ebi.ac.uk).
+ * Modified to display Australian tools by Madison Flannery (madisonflannery93@gmail.com)
  */
 
 
@@ -125,22 +126,27 @@
 
     };
 
-    var filterELIXIRTools = function (tools) {
-        return tools.filter(
-            function (value) {
-                return (typeof value.elixirInfo !== 'undefined');
-            });
+    var getAussieTools = function (rawTools) {
+        var tools = [];  // To store all aussie tools.
 
-    };
-
-    var getAllNodes = function (tools) {
-        var nodes = [];
-        for (var index = 0; index < tools.length; index++) {
-            nodes.push(tools[index].elixirInfo.elixirNode);
+        // For all the tools obtained from registry.
+        for (var i = 0; i < rawTools.length; i++) {
+            // Go through all the contacts.
+            for (var j = 0; j < rawTools[i].contact.length; j++) {
+                // If there's a contact name and it contains Australia, add.
+                if((rawTools[i].contact[j].contactName) !== undefined) {
+                    if ((rawTools[i].contact[j].contactName).indexOf('Australia') !== -1) {
+                        tools.push(rawTools[i]);
+                    }
+                }
+            }
         }
-        nodes = sortByAlphabet(nodes);
-        nodes = removeDuplicates(nodes);
-        return nodes;
+
+        // Create map of country : tools.
+        // We only have Australia right now.
+        mappedTools = {};
+        mappedTools['Australia'] = tools;
+        return mappedTools;
     };
 
     var sortByAlphabet = function (nodes) {
@@ -172,16 +178,9 @@
      */
 
     var processELIXIRTools = function (rawTools) {
-        //var rawTools = requestELIXIRTools();
-        var tools = filterELIXIRTools(rawTools);
-        var nodes = getAllNodes(tools);
-        var mappedTools = createMapToolByNode(nodes, tools);
-        if (getLocalStorage() !== null) {
-            if (JSON.stringify(getLocalStorage().info) === JSON.stringify(mappedTools)) {
-
-            }
-        }
+        var mappedTools = getAussieTools(rawTools);
         createHTML(mappedTools);
+        $("#Australia .accordion_head").click()
     };
 
     function doRequest() {
@@ -193,8 +192,7 @@
                 processELIXIRTools(data);
             },
             error: function (data) {
-                //todo Display a link to the registry.
-                throw new Error('Could not request data form registry(' + REGISTRY_URL + ') STATUS: ' + code);
+                throw new Error('Could not request data from registry(' + REGISTRY_URL + ') STATUS: ' + code);
             }
         });
     }
@@ -261,20 +259,20 @@
         localStorage.setItem('ELIXIRSimpleServicesView', JSON.stringify(objToSave));
     }
 
-    function getLocalStorage() {
-        return JSON.parse(localStorage.getItem('ELIXIRSimpleServicesView'));
-    }
+    // function getLocalStorage() {
+    //     return JSON.parse(localStorage.getItem('ELIXIRSimpleServicesView'));
+    // }
 
-    function localStorageIsValid() {
-        var savedObj = getLocalStorage();
-        if (savedObj !== null) {
-            var timeDifference = Date.now() - savedObj.timeStamp;
-            if (timeDifference < LOCALSTORAGE_LIFETIME) {
-                return true;
-            }
-        }
-        return false;
-    }
+    // function localStorageIsValid() {
+    //    var savedObj = getLocalStorage();
+    //    if (savedObj !== null) {
+    //        var timeDifference = Date.now() - savedObj.timeStamp;
+    //        if (timeDifference < LOCALSTORAGE_LIFETIME) {
+    //            return true;
+    //        }
+    //    }
+    //    return false;
+    // }
 
     function createLoadingBar() {
         var loadingBar = new Image();
@@ -312,18 +310,17 @@
 
         createLoadingBar();
 
-        if (localStorageIsValid()) {
-            var savedObj = getLocalStorage();
-            createHTML(savedObj.info);
-            doRequest();
-        } else {
-            doRequest();
-        }
+        // NOTE: REMOVING LOCAL STORAGE COMPONENT FOR NOW - RE-ADD LATER.
+        // if (localStorageIsValid()) {
+        //     var savedObj = getLocalStorage();
+        //     createHTML(savedObj.info);
+        //     doRequest();
+        // } else {
+        doRequest();
+        // }
     }
 
     window.onload = function () {
         main()
     }
 })();
-
-
