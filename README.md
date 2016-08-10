@@ -6,6 +6,7 @@ A modification of [Elixir-Services-Display](https://github.com/tschaka1904/Elixi
 ### Install instructions
 1. Install nginx - `sudo apt-get install nginx`
 2. Clone this repo
-3. Put all files into `/usr/share/nginx/html`
+3. Put all files and folders into `/usr/share/nginx/html`
 4. Reload nginx - `sudo service nginx restart`
+5. Should be available at `localhost/toolsAU/toolsAU.html`
 
