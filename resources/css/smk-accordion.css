@@ -1,3 +1,9 @@
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .elixir_accordion_container .smk_accordion {
     position: relative;
     padding: 0;
