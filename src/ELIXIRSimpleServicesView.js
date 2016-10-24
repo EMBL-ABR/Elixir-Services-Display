@@ -136,17 +136,17 @@
             // Go through all the contacts.
             for (var j = 0; j < rawTools[i].contact.length && pushed === false; j++) {
                 // If there's a contact name and it contains Australia, add.
-                if(((rawTools[i].contact[j].contactName) !== undefined) && ((rawTools[i].contact[j].contactName).indexOf('Australia') !== -1)) {
+                if(((rawTools[i].contact[j].contactName) !== null) && ((rawTools[i].contact[j].contactName).indexOf('Australia') !== -1)) {
                     tools.push(rawTools[i]);
                     pushed = true;
                 }
-                else if (((rawTools[i].contact[j].contactEmail) !== undefined) && ((rawTools[i].contact[j].contactEmail).indexOf('edu.au') !== -1)) {
+                else if (((rawTools[i].contact[j].contactEmail) !== null) && ((rawTools[i].contact[j].contactEmail).indexOf('edu.au') !== -1)) {
                     tools.push(rawTools[i]);
                     pushed = true;
                 }
             }
 
-            if(pushed === false && rawTools[i].credits !== undefined && rawTools[i].credits.creditsInstitution !== undefined) {
+            if(pushed === false && rawTools[i].credits !== null && rawTools[i].credits.creditsInstitution !== null) {
                 for (var j = 0; j < rawTools[i].credits.creditsInstitution.length && pushed === false; j++) {
                     // If there's a contact name and it contains Australia, add.
                     if((rawTools[i].credits.creditsInstitution[j]).indexOf('Australia') !== -1) {
@@ -229,6 +229,7 @@
     var processELIXIRTools = function (rawTools) {
         var mappedTools = getAussieTools(rawTools);
         createHTML(mappedTools);
+        //createHTML(rawTools)
         $("#Australia .accordion_head").click()
     };
 
