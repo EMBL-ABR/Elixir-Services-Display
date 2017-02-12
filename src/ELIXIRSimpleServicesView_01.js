@@ -126,12 +126,23 @@
 
     };
 
+    var havePushed = function (tool, tools) {
+      // return True if we've pushed a tool with same name
+      // so then we dont push again.
+      for (var i = 0; i < tools.length; i++) {
+        if (tools[i].name === tool.name) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     var getAussieTools = function (rawTools) {
         var tools = [];  // To store all aussie tools.
 
         // For all the tools obtained from registry.
         for (var i = 0; i < rawTools.length; i++) {
-            var pushed = false;
+            var pushed = havePushed(rawTools[i], tools);
 
             // Go through all the contacts.
             for (var j = 0; j < rawTools[i].contact.length && pushed === false; j++) {
